@@ -1,0 +1,2 @@
+createSrcSidebar('[["example1",["",[],["example1.rs"]]],["example2",["",[],["example2.rs"]]],["revolution",["",[],["buildings.rs","lib.rs","recipes.rs","resources.rs","tick.rs"]]]]');
+//{"start":19,"fragment_lengths":[36,37,87]}

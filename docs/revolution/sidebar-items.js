@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ResourceType"],"fn":["mine_copper","mine_iron","play"],"mod":["buildings","recipes"],"struct":["Bundle","Resource","Tick"]};
