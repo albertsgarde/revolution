@@ -13,4 +13,4 @@ The only rule that is not enforced by the compiler is that you should use the li
 
 ## Help
 Library documentation is available [here](https://albertsgarde.github.io/revolution).
-A good place to start is to build a [furnace](https://albertsgarde.github.io/revolution/buildings/struct.Furnace.html) and start [mining](https://albertsgarde.github.io/revolution/https://albertsgarde.github.io/revolution/revolution/fn.mine_iron.html) and smelting iron.
+A good place to start is to build a [furnace](https://albertsgarde.github.io/revolution/revolution/buildings/struct.Furnace.html) and start [mining](https://albertsgarde.github.io/revolution/revolution/fn.mine_iron.html) and smelting iron.
