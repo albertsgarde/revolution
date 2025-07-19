@@ -1,3 +1,12 @@
+//! Buildings take inputs to produce outputs over time.
+//!
+//! To use a building, you must first build it which takes a number of resources.
+//! Then you can add inputs to it using `add_input` or similar functions.
+//! Once it has sufficient inputs, it will start producing outputs, which can be extracted using `take_output` or similar functions.
+//!
+//! When created, a building is set to a specific [`Recipe`](crate::recipes), which defines the inputs and outputs.
+//! This can be changed using the `change_recipe` method, but only if the building is empty (no inputs or outputs).
+
 use std::marker::PhantomData;
 
 use crate::{
@@ -6,6 +15,7 @@ use crate::{
     tick::Tick,
 };
 
+/// The assembler is used for recipes that require two different inputs to produce an output.
 #[derive(Debug)]
 pub struct Assembler<R: AssemblerRecipe> {
     input1_amount: u32,
@@ -20,6 +30,7 @@ type AssemblerIronInput = Bundle<{ ResourceType::Iron }, 15>;
 type AssemblerCopperInput = Bundle<{ ResourceType::Copper }, 10>;
 
 impl<R: AssemblerRecipe> Assembler<R> {
+    /// Builds an assembler. Costs 15 iron and 10 copper.
     pub fn build(tick: &Tick, _iron: AssemblerIronInput, _copper: AssemblerCopperInput) -> Self {
         Self {
             input1_amount: 0,
@@ -31,6 +42,8 @@ impl<R: AssemblerRecipe> Assembler<R> {
         }
     }
 
+    /// Changes the [`Recipe`](crate::recipes) of the assembler.
+    /// Returns the original assembler if the assembler has no inputs or outputs.
     pub fn change_recipe<R2: AssemblerRecipe>(self) -> Result<Assembler<R2>, Assembler<R>> {
         if self.input1_amount > 0 || self.input2_amount > 0 || self.output_amount > 0 {
             Err(self)
@@ -46,7 +59,7 @@ impl<R: AssemblerRecipe> Assembler<R> {
         }
     }
 
-    pub fn tick(&mut self, tick: &Tick) {
+    fn tick(&mut self, tick: &Tick) {
         assert!(tick.cur() >= self.tick, "Tick must be non-decreasing");
         while self.tick < tick.cur() {
             self.tick += 1;
@@ -119,6 +132,7 @@ impl<R: AssemblerRecipe> Assembler<R> {
     }
 }
 
+/// The furnace is used to smelt ores into base resources.
 #[derive(Debug)]
 pub struct Furnace<R: FurnaceRecipe> {
     input_amount: u32,
@@ -131,6 +145,7 @@ pub struct Furnace<R: FurnaceRecipe> {
 type FurnaceIronInput = Bundle<{ ResourceType::Iron }, 10>;
 
 impl<R: FurnaceRecipe> Furnace<R> {
+    /// Builds a furnace. Costs 10 iron.
     pub fn build(tick: &Tick, _iron: FurnaceIronInput) -> Self {
         Self {
             input_amount: 0,
@@ -141,6 +156,8 @@ impl<R: FurnaceRecipe> Furnace<R> {
         }
     }
 
+    /// Changes the [`Recipe`](crate::recipes) of the furnace.
+    /// Returns the original furnace if the furnace has no inputs or outputs.
     pub fn change_recipe<R2: FurnaceRecipe>(self) -> Result<Furnace<R2>, Furnace<R>> {
         if self.input_amount > 0 || self.output_amount > 0 {
             Err(self)
@@ -155,7 +172,7 @@ impl<R: FurnaceRecipe> Furnace<R> {
         }
     }
 
-    pub fn tick(&mut self, tick: &Tick) {
+    fn tick(&mut self, tick: &Tick) {
         assert!(tick.cur() >= self.tick, "Tick must be non-decreasing");
         while self.tick < tick.cur() {
             self.tick += 1;

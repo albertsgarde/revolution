@@ -1,5 +1,10 @@
 use std::fmt::Display;
 
+/// The tick is used to keep track of time in the game.
+/// You can advance the game by one tick using the [`next`](Tick::next) method.
+/// Many functions and building methods require a [`Tick`](Tick) to be passed in, which allows them to update their state.
+/// If a function takes a [`&mut Tick`](Tick), then the function will take time.
+/// If a function merely takes a [`&Tick`](Tick), or no [`Tick`](Tick) at all, it will never advance the game time.
 #[derive(Debug)]
 pub struct Tick {
     tick: u64,
@@ -10,11 +15,13 @@ impl Tick {
         Self { tick: 0 }
     }
 
+    /// Advances the game by one tick.
     pub fn next(&mut self) {
         println!("Tick: {}", self.tick);
         self.tick += 1;
     }
 
+    /// Returns the current tick number.
     pub fn cur(&self) -> u64 {
         self.tick
     }
