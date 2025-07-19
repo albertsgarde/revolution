@@ -1,11 +1,18 @@
 use revolution::{
-    Assembler, Furnace, Resource, ResourceType,
+    Bundle, Resource, ResourceType, Tick,
+    buildings::{Assembler, Furnace},
     recipes::{CopperSmelting, IronSmelting, PointRecipe},
 };
 
 pub fn main() {
-    let (mut tick, mut iron) = revolution::start();
+    revolution::play(user_main)
+}
 
+pub fn user_main(
+    mut tick: Tick,
+    iron: Bundle<{ ResourceType::Iron }, 10>,
+) -> (Tick, Bundle<{ ResourceType::Point }, 10>) {
+    let mut iron = iron.to_resource();
     let mut iron_furnace = Furnace::<IronSmelting>::build(&tick, iron.bundle().unwrap());
 
     while iron < 10 {
@@ -95,7 +102,7 @@ pub fn main() {
         );
 
         if let Some(point_bundle) = points.bundle::<10>() {
-            revolution::win(tick, point_bundle);
+            return (tick, point_bundle);
         }
     }
 }

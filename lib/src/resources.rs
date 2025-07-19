@@ -99,6 +99,10 @@ impl<const RESOURCE_TYPE: ResourceType, const AMOUNT: u32> Bundle<RESOURCE_TYPE,
     pub fn amount(&self) -> u32 {
         AMOUNT
     }
+
+    pub fn to_resource(self) -> Resource<RESOURCE_TYPE> {
+        Resource { amount: AMOUNT }
+    }
 }
 
 impl<const RESOURCE_TYPE: ResourceType, const AMOUNT: u32> AddAssign<Bundle<RESOURCE_TYPE, AMOUNT>>

@@ -1,10 +1,15 @@
 use revolution::{
-    Assembler, Furnace, Resource, ResourceType,
+    Bundle, Resource, ResourceType, Tick,
+    buildings::{Assembler, Furnace},
     recipes::{CopperSmelting, IronSmelting, PointRecipe},
 };
 
 fn main() {
-    let (mut tick, mut iron) = revolution::start();
+    revolution::play(user_main);
+}
+
+fn user_main(mut tick: Tick, iron: Bundle<{ ResourceType::Iron }, 10>) -> (Tick, Bundle<{ ResourceType::Point }, 10>) {
+    let mut iron = iron.to_resource();
 
     let mut iron_furnace = Furnace::<IronSmelting>::build(&tick, iron.bundle().unwrap());
 
@@ -14,11 +19,6 @@ fn main() {
         while iron_furnace.cur_output(&tick) >= 1 {
             iron += iron_furnace.take_output::<1>(&tick).unwrap();
         }
-        println!(
-            "Furnace iron ore: {}, Inventory: {}",
-            iron_furnace.cur_input(&tick),
-            &iron
-        );
     }
 
     let _ = iron_furnace.empty_input(&tick);
@@ -31,11 +31,6 @@ fn main() {
         while copper_furnace.cur_output(&tick) >= 1 {
             copper += copper_furnace.take_output::<1>(&tick).unwrap();
         }
-        println!(
-            "Furnace copper ore: {}, Inventory: {}",
-            copper_furnace.cur_input(&tick),
-            &copper
-        );
     }
 
     let mut points = Resource::<{ ResourceType::Point }>::empty();
@@ -53,18 +48,9 @@ fn main() {
             points += assembler.take_output::<1>(&tick).unwrap();
         }
         tick.next();
-        println!(
-            "Copper ore: {}, Assembler iron: {}, Assembler copper: {}, Inventory: {}, {}, {}",
-            copper_furnace.cur_input(&tick),
-            assembler.cur_input1(&tick),
-            assembler.cur_input2(&tick),
-            &iron,
-            &copper,
-            &points
-        );
 
         if let Some(point_bundle) = points.bundle::<10>() {
-            revolution::win(tick, point_bundle);
+            return (tick, point_bundle);
         }
     }
 }
