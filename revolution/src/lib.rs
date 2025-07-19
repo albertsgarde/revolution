@@ -22,7 +22,9 @@ pub fn play(main: fn(Tick, Bundle<{ ResourceType::Iron }, 10>) -> (Tick, Bundle<
     let tick = Tick::start();
     let iron = Bundle::<{ ResourceType::Iron }, 10>::new();
     let (tick, _points) = main(tick, iron);
-    panic!("You won in {tick} ticks!")
+    println!("The revolution succeeded or something!");
+    println!("You won in {tick} ticks!");
+    std::process::exit(0);
 }
 
 pub fn mine_iron(tick: &mut Tick) -> Bundle<{ ResourceType::IronOre }, 1> {
