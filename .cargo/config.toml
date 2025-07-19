@@ -1,0 +1,2 @@
+[alias]
+play = "run  --package game --bin game"
