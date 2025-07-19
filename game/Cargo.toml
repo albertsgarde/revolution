@@ -5,4 +5,4 @@ edition = "2024"
 
 
 [dependencies]
-revolution = { path = "../lib" }
+revolution = { path = "../revolution" }
