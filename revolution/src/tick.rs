@@ -8,16 +8,26 @@ use std::fmt::Display;
 #[derive(Debug)]
 pub struct Tick {
     tick: u64,
+    log: bool,
 }
 
 impl Tick {
     pub(crate) fn start() -> Self {
-        Self { tick: 0 }
+        Self { tick: 0, log: true }
+    }
+
+    /// Sets whether or not to log on tick advancement.
+    pub fn log(&mut self, log: bool) {
+        self.log = log;
     }
 
     /// Advances the game by one tick.
+    /// By default prints the current tick number to the console.
+    /// If you want to disable this, use the [`log`](Tick::log) method.
     pub fn next(&mut self) {
-        println!("Tick: {}", self.tick);
+        if self.log {
+            println!("Tick: {}", self.tick);
+        }
         self.tick += 1;
     }
 
